@@ -1,0 +1,33 @@
+service: serverless-web-crawler
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: us-east-1
+  deploymentBucket:
+    name: serverless-web-crawler-bucket
+  iam:
+    role: arn:aws:iam::008735640664:role/Serverless-Web-Crawler-Role
+
+functions:
+  enqueuer:
+    handler: handler.enqueuer
+  scanner:
+    handler: handler.scanner
+    events:
+     - sqs: arn:aws:sqs:us-east-1:008735640664:serverless-web-crawler-sqs
+
+custom:
+  pythonRequirements:
+    useDownloadCache: false
+    useStaticCache: false
+    slim: true
+    slimPatternsAppendDefaults: false
+    slimPatterns:
+      - "**/*.py[c|o]"
+      - "**/__pycache__*"
+
+plugins:
+  - serverless-python-requirements

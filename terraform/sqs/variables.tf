@@ -1,0 +1,3 @@
+variable "sqs" {
+  type = string
+}
